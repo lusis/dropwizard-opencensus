@@ -1,0 +1,10 @@
+logging:
+  level: INFO
+  loggers:
+    io.github.lusis: DEBUG
+opencensus:
+  enabled: true
+  exporter:
+    type: logging
+  sampler:
+    type: always

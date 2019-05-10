@@ -1,0 +1,2 @@
+io.github.lusis.dropwizard.opencensus.exporters.LoggingExporterFactory
+io.github.lusis.dropwizard.opencensus.exporters.DefaultExporterFactory
