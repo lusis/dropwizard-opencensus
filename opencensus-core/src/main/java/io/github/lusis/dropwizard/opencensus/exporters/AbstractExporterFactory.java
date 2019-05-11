@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.annotation.Nullable;
 
-
 public abstract class AbstractExporterFactory implements ExporterFactory {
     private ExporterFactory exporter;
 

@@ -7,7 +7,6 @@ import io.github.lusis.dropwizard.opencensus.OpenCensusBundle;
 import io.github.lusis.dropwizard.opencensus.OpenCensusFactory;
 import io.github.lusis.opencensus.resources.ExampleResource;
 
-
 public class ExampleApplication extends Application<ExampleConfiguration> {
 
     public static void main(final String[] args) throws Exception {
@@ -21,18 +20,16 @@ public class ExampleApplication extends Application<ExampleConfiguration> {
 
     @Override
     public void initialize(final Bootstrap<ExampleConfiguration> bootstrap) {
-        bootstrap.addBundle(
-                new OpenCensusBundle<ExampleConfiguration>() {
-                    @Override
-                    public OpenCensusFactory getOpenCensusFactory(ExampleConfiguration configuration) {
-                        return configuration.getOpenCensusFactory();
-                    }
-                });
+        bootstrap.addBundle(new OpenCensusBundle<ExampleConfiguration>() {
+            @Override
+            public OpenCensusFactory getOpenCensusFactory(ExampleConfiguration configuration) {
+                return configuration.getOpenCensusFactory();
+            }
+        });
     }
 
     @Override
-    public void run(final ExampleConfiguration configuration,
-                    final Environment environment) {
+    public void run(final ExampleConfiguration configuration, final Environment environment) {
 
         final ExampleResource resource = new ExampleResource();
         environment.jersey().register(resource);

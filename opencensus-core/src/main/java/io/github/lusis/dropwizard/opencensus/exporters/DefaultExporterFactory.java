@@ -28,7 +28,10 @@ public class DefaultExporterFactory extends AbstractExporterFactory {
         unregister(Tracing.getExportComponent().getSpanExporter());
     }
 
-    static void register(SpanExporter spanExporter) { spanExporter.registerHandler( "NullExporter", HANDLER);}
+    static void register(SpanExporter spanExporter) {
+        spanExporter.registerHandler("NullExporter", HANDLER);
+    }
+
     static void unregister(SpanExporter spanExporter) {
         spanExporter.unregisterHandler("NullExporter");
     }

@@ -6,4 +6,3 @@ import io.dropwizard.Configuration;
 public interface OpenCensusConfiguration<C extends Configuration> {
     OpenCensusFactory getOpenCensusFactory(C configuration);
 }
-

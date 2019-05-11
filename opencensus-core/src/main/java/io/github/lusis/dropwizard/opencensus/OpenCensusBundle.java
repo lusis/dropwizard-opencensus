@@ -1,6 +1,5 @@
 package io.github.lusis.dropwizard.opencensus;
 
-
 import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.setup.Bootstrap;
@@ -12,15 +11,12 @@ import io.opencensus.contrib.http.servlet.OcHttpServletFilter;
 import io.opencensus.trace.Tracing;
 import io.opencensus.trace.config.TraceConfig;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 import javax.servlet.DispatcherType;
 
 import java.util.EnumSet;
-
 
 public abstract class OpenCensusBundle<C extends Configuration>
         implements ConfiguredBundle<C>, OpenCensusConfiguration<C> {
@@ -42,19 +38,17 @@ public abstract class OpenCensusBundle<C extends Configuration>
         final SamplerFactory sampler = getOpenCensusFactory(configuration).getSamplerFactory();
         final ExporterFactory exporter = getOpenCensusFactory(configuration).getExporterFactory();
 
-
         buildTracing(environment, enabled, sampler, exporter);
     }
 
-    protected void buildTracing(
-            final Environment environment, final boolean enabled, final SamplerFactory sampler, final ExporterFactory exporter) {
-        if(!enabled) {
+    protected void buildTracing(final Environment environment, final boolean enabled, final SamplerFactory sampler,
+            final ExporterFactory exporter) {
+        if (!enabled) {
             LOGGER.info("OpenCensus tracing is disabled");
             return;
         } else {
             traceConfig.updateActiveTraceParams(
-                    traceConfig.getActiveTraceParams().toBuilder().setSampler(sampler.sampler()).build()
-            );
+                    traceConfig.getActiveTraceParams().toBuilder().setSampler(sampler.sampler()).build());
             LOGGER.info("sampler {}", traceConfig.getActiveTraceParams().getSampler().getDescription());
             exporter.register();
 
