@@ -12,13 +12,14 @@
     <url>https://github.com/lusis/dropwizard-opencensus</url>
 
     <properties>
-        <opencensus.version>0.19.2</opencensus.version>
+        <opencensus.version>0.21.0</opencensus.version>
         <dropwizard.version>1.3.9</dropwizard.version>
     </properties>
 
     <modules>
         <module>opencensus-core</module>
         <module>opencensus-example</module>
+        <module>opencensus-client</module>
     </modules>
 
     <developers>
@@ -72,6 +73,18 @@
         <dependency>
             <groupId>io.opencensus</groupId>
             <artifactId>opencensus-contrib-http-servlet</artifactId>
+            <version>${opencensus.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.opencensus</groupId>
+            <artifactId>opencensus-contrib-http-jaxrs</artifactId>
+            <version>${opencensus.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.opencensus</groupId>
+            <artifactId>opencensus-contrib-http-util</artifactId>
             <version>${opencensus.version}</version>
         </dependency>
 

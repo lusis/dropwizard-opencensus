@@ -4,12 +4,14 @@ import io.dropwizard.Configuration;
 import io.dropwizard.ConfiguredBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+
 import io.github.lusis.dropwizard.opencensus.exporters.ExporterFactory;
 import io.github.lusis.dropwizard.opencensus.samplers.SamplerFactory;
 
 import io.opencensus.contrib.http.servlet.OcHttpServletFilter;
 import io.opencensus.trace.Tracing;
 import io.opencensus.trace.config.TraceConfig;
+import io.opencensus.contrib.http.util.HttpViews;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,10 +52,13 @@ public abstract class OpenCensusBundle<C extends Configuration>
             traceConfig.updateActiveTraceParams(
                     traceConfig.getActiveTraceParams().toBuilder().setSampler(sampler.sampler()).build());
             LOGGER.info("sampler {}", traceConfig.getActiveTraceParams().getSampler().getDescription());
+
             exporter.register();
 
             environment.servlets().addFilter(OcHttpServletFilter.class.getName(), new OcHttpServletFilter())
                     .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/*");
+            HttpViews.registerAllViews();
         }
     }
+
 }

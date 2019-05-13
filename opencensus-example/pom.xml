@@ -12,12 +12,17 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <mainClass>io.github.lusis.opencensus.ExampleApplication</mainClass>
+        <mainClass>io.github.lusis.dropwizard.opencensus.ExampleApplication</mainClass>
     </properties>
     <dependencies>
         <dependency>
             <groupId>io.github.lusis</groupId>
             <artifactId>opencensus-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.lusis</groupId>
+            <artifactId>opencensus-client</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
