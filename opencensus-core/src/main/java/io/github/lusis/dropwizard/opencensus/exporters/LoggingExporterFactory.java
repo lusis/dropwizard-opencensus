@@ -8,17 +8,13 @@ import org.slf4j.LoggerFactory;
 @JsonTypeName("logging")
 public class LoggingExporterFactory extends AbstractExporterFactory {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoggingExporterFactory.class);
-
     @Override
     public void register() {
-        LOGGER.info("Registering LoggingTraceExporter");
         LoggingTraceExporter.register();
     }
 
     @Override
     public void unregister() {
-        LOGGER.info("Unregistering LoggingTraceExporter");
         LoggingTraceExporter.unregister();
     }
 }

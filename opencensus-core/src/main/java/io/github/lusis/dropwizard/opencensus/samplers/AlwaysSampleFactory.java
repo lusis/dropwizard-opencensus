@@ -9,11 +9,8 @@ import org.slf4j.LoggerFactory;
 @JsonTypeName("always")
 public class AlwaysSampleFactory extends AbstractSamplerFactory {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AlwaysSampleFactory.class);
-
     @Override
     public Sampler sampler() {
-        LOGGER.info("using sampler: always");
         return Samplers.alwaysSample();
     }
 

@@ -4,15 +4,10 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
-import io.github.lusis.dropwizard.opencensus.OpenCensusBundle;
-import io.github.lusis.dropwizard.opencensus.OpenCensusFactory;
-import io.github.lusis.dropwizard.opencensus.OcClientBuilder;
-import io.github.lusis.dropwizard.opencensus.OcClientConfiguration;
 import io.github.lusis.dropwizard.opencensus.resources.ExampleResource;
 
 import javax.ws.rs.client.Client;
 
-import javax.ws.rs.client.Client;
 
 public class ExampleApplication extends Application<ExampleConfiguration> {
 
@@ -38,7 +33,7 @@ public class ExampleApplication extends Application<ExampleConfiguration> {
     @Override
     public void run(final ExampleConfiguration configuration, final Environment environment) {
         final Client client;
-        client = new OcClientBuilder(environment).build(configuration.getOcClientConfiguration());
+        client = new TracingJerseyClient(environment).build(configuration.getTracingJerseyClientConfiguration());
         final ExampleResource resource = new ExampleResource(client);
         environment.jersey().register(resource);
     }

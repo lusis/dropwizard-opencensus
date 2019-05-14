@@ -2,9 +2,19 @@ logging:
   level: INFO
   loggers:
     io.github.lusis: DEBUG
+# by default, no configuration enables tracing for all paths but drops everything on the floor
 opencensus:
-  enabled: true
+# set enabled to false to fully disable it
+#  enabled: false
   exporter:
+    # options [logging, never, always]
     type: logging
   sampler:
+    # options [never, always, probability]
     type: always
+    # sampleRate is used for the probability sampler
+    #sampleRate: 0.50
+  # array of urls to trace - default is /*
+  # paths:
+  #  - "/example/ping"
+  #  - "/example/client"

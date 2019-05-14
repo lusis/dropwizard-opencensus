@@ -17,9 +17,9 @@
     </properties>
 
     <modules>
+        <module>opencensus-client</module>
         <module>opencensus-core</module>
         <module>opencensus-example</module>
-        <module>opencensus-client</module>
     </modules>
 
     <developers>

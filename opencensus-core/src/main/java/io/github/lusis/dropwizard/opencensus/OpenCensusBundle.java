@@ -8,17 +8,13 @@ import io.dropwizard.setup.Environment;
 import io.github.lusis.dropwizard.opencensus.exporters.ExporterFactory;
 import io.github.lusis.dropwizard.opencensus.samplers.SamplerFactory;
 
-import io.opencensus.contrib.http.servlet.OcHttpServletFilter;
+import io.github.lusis.dropwizard.opencensus.server.TracingJerseyServer;
+
 import io.opencensus.trace.Tracing;
 import io.opencensus.trace.config.TraceConfig;
-import io.opencensus.contrib.http.util.HttpViews;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.DispatcherType;
-
-import java.util.EnumSet;
 
 public abstract class OpenCensusBundle<C extends Configuration>
         implements ConfiguredBundle<C>, OpenCensusConfiguration<C> {
@@ -33,32 +29,35 @@ public abstract class OpenCensusBundle<C extends Configuration>
 
     @Override
     public void run(final C configuration, Environment environment) throws Exception {
-        if (configuration == null) {
-            return;
-        }
-        final boolean enabled = getOpenCensusFactory(configuration).isEnabled();
-        final SamplerFactory sampler = getOpenCensusFactory(configuration).getSamplerFactory();
-        final ExporterFactory exporter = getOpenCensusFactory(configuration).getExporterFactory();
+        OpenCensusFactory ocFactory = getOpenCensusFactory(configuration);
 
-        buildTracing(environment, enabled, sampler, exporter);
+        if (configuration == null) {
+            LOGGER.info("OpenCensus tracing is disabled");
+        } else {
+            final boolean enabled = ocFactory.getEnabled();
+            final SamplerFactory sampler = ocFactory.getSamplerFactory();
+            final ExporterFactory exporter = ocFactory.getExporterFactory();
+            final String[] paths = ocFactory.getPaths();
+            if (enabled) {
+                buildTracing(environment, enabled, sampler, exporter, paths);
+            } else {
+                LOGGER.info("OpenCensus tracing is disabled");
+            }
+        }
     }
 
     protected void buildTracing(final Environment environment, final boolean enabled, final SamplerFactory sampler,
-            final ExporterFactory exporter) {
-        if (!enabled) {
-            LOGGER.info("OpenCensus tracing is disabled");
-            return;
-        } else {
+            final ExporterFactory exporter, String... paths) {
             traceConfig.updateActiveTraceParams(
                     traceConfig.getActiveTraceParams().toBuilder().setSampler(sampler.sampler()).build());
+            LOGGER.info("Enabling opencensus tracing");
             LOGGER.info("sampler {}", traceConfig.getActiveTraceParams().getSampler().getDescription());
+            LOGGER.info("exporter {}", exporter.getClass().getName());
+            LOGGER.info("traced paths {}", (Object) paths);
 
             exporter.register();
 
-            environment.servlets().addFilter(OcHttpServletFilter.class.getName(), new OcHttpServletFilter())
-                    .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/*");
-            HttpViews.registerAllViews();
-        }
+            new TracingJerseyServer(environment).setPaths(paths).build();
     }
 
 }

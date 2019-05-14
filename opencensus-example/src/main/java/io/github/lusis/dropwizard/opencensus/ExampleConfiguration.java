@@ -4,11 +4,6 @@ import io.dropwizard.Configuration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.github.lusis.dropwizard.opencensus.OcClientBuilder;
-import io.github.lusis.dropwizard.opencensus.OcClientConfiguration;
-
-import io.github.lusis.dropwizard.opencensus.OpenCensusFactory;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -17,7 +12,7 @@ public class ExampleConfiguration extends Configuration {
     @Valid
     public final OpenCensusFactory opencensus = new OpenCensusFactory();
 
-    private final OcClientConfiguration ocClient = new OcClientConfiguration();
+    private final TracingJerseyClientConfiguration ocClient = new TracingJerseyClientConfiguration();
 
     @JsonProperty
     public OpenCensusFactory getOpenCensusFactory() {
@@ -25,7 +20,7 @@ public class ExampleConfiguration extends Configuration {
     }
 
     @JsonProperty
-    public OcClientConfiguration getOcClientConfiguration() {
+    public TracingJerseyClientConfiguration getTracingJerseyClientConfiguration() {
         return ocClient;
     }
 }

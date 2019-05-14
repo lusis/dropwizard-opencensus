@@ -9,8 +9,6 @@ import org.slf4j.LoggerFactory;
 
 @JsonTypeName("probability")
 public class ProbabilitySamplerFactory extends AbstractSamplerFactory {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProbabilitySamplerFactory.class);
     private double sampleRate = 0.1;
 
     @JsonProperty("sampleRate")
@@ -25,7 +23,6 @@ public class ProbabilitySamplerFactory extends AbstractSamplerFactory {
 
     @Override
     public Sampler sampler() {
-        LOGGER.info("using sampler: probability with sample rate {}", getSampleRate());
         return Samplers.probabilitySampler(this.sampleRate);
     }
 }

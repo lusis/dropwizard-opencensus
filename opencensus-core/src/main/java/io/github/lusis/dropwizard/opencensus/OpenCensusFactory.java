@@ -10,18 +10,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.annotation.Nullable;
 
 public class OpenCensusFactory {
-    private boolean enabled = false;
+    private boolean enabled = true;
+    private String[] paths = new String[]{"/*"};
 
     @Nullable
     private SamplerFactory sampler = new DefaultSampleFactory();
 
     @Nullable
     private ExporterFactory exporter = new DefaultExporterFactory();
-
-    @Nullable
-    public boolean isEnabled() {
-        return enabled;
-    }
 
     @JsonProperty
     @Nullable
@@ -31,9 +27,17 @@ public class OpenCensusFactory {
 
     @JsonProperty
     @Nullable
-    public boolean getEnabled(boolean enabled) {
-        return this.isEnabled();
+    public boolean getEnabled() {
+        return this.enabled;
     }
+
+    @JsonProperty
+    @Nullable
+    public String[] getPaths() { return this.paths;};
+
+    @JsonProperty
+    @Nullable
+    public void setPaths(String... paths) { this.paths = paths;};
 
     @JsonProperty("sampler")
     @Nullable

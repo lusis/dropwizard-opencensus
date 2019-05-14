@@ -13,18 +13,15 @@ import org.slf4j.LoggerFactory;
 
 @JsonTypeName("default")
 public class DefaultExporterFactory extends AbstractExporterFactory {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultExporterFactory.class);
     private static final DefaultExporterFactory.NullExporterHandler HANDLER = new DefaultExporterFactory.NullExporterHandler();
 
     @Override
     public void register() {
-        LOGGER.info("Registering Null Exporter");
         register(Tracing.getExportComponent().getSpanExporter());
     }
 
     @Override
     public void unregister() {
-        LOGGER.info("Unregistering Null Exporter");
         unregister(Tracing.getExportComponent().getSpanExporter());
     }
 
