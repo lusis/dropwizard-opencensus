@@ -1,3 +1,3 @@
-io.github.lusis.dropwizard.opencensus.samplers.AlwaysSampleFactory
-io.github.lusis.dropwizard.opencensus.samplers.ProbabilitySamplerFactory
-io.github.lusis.dropwizard.opencensus.samplers.DefaultSampleFactory
+io.github.lusis.dropwizard.opencensus.samplers.AlwaysSampler
+io.github.lusis.dropwizard.opencensus.samplers.ProbabilitySampler
+io.github.lusis.dropwizard.opencensus.samplers.DefaultSampler

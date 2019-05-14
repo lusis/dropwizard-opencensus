@@ -51,7 +51,7 @@ public abstract class OpenCensusBundle<C extends Configuration>
             traceConfig.updateActiveTraceParams(
                     traceConfig.getActiveTraceParams().toBuilder().setSampler(sampler.sampler()).build());
             LOGGER.info("Enabling opencensus tracing");
-            LOGGER.info("sampler {}", traceConfig.getActiveTraceParams().getSampler().getDescription());
+            LOGGER.info("sampler {}", sampler.getClass().getName());
             LOGGER.info("exporter {}", exporter.getClass().getName());
             LOGGER.info("traced paths {}", (Object) paths);
 

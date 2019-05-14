@@ -1,9 +1,9 @@
 package io.github.lusis.dropwizard.opencensus;
 
-import io.github.lusis.dropwizard.opencensus.exporters.DefaultExporterFactory;
+import io.github.lusis.dropwizard.opencensus.exporters.DefaultExporter;
 import io.github.lusis.dropwizard.opencensus.exporters.ExporterFactory;
 import io.github.lusis.dropwizard.opencensus.samplers.SamplerFactory;
-import io.github.lusis.dropwizard.opencensus.samplers.DefaultSampleFactory;
+import io.github.lusis.dropwizard.opencensus.samplers.DefaultSampler;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -14,10 +14,10 @@ public class OpenCensusFactory {
     private String[] paths = new String[]{"/*"};
 
     @Nullable
-    private SamplerFactory sampler = new DefaultSampleFactory();
+    private SamplerFactory sampler = new DefaultSampler();
 
     @Nullable
-    private ExporterFactory exporter = new DefaultExporterFactory();
+    private ExporterFactory exporter = new DefaultExporter();
 
     @JsonProperty
     @Nullable

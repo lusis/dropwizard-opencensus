@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @JsonTypeName("probability")
-public class ProbabilitySamplerFactory extends AbstractSamplerFactory {
+public class ProbabilitySampler extends AbstractSamplerFactory {
     private double sampleRate = 0.1;
 
     @JsonProperty("sampleRate")

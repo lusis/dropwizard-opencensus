@@ -108,6 +108,13 @@ If you look closely, the span flows look like this:
 - client calls `http://localhost:8080/example/ping` with spanId `0e3c6731e1853260` and parent spanId `61916035e34a579e`
 - request to `/example/ping` has spanId `70bdcb2bdb09e7ce` with parent spanId `0e3c6731e1853260`
 
+This is more easily visualized when using the stackdriver exporter
+
+![stackdriver main trace](images/stackdriver-trace.png)
+
+If you click on the `Sent` span you can see the instrumented Jersey client trace
+![stackdriver jersey client trace](images/stackdriver-trace-client.png)
+
 TODO
 ----
 
@@ -115,7 +122,7 @@ There's a lot to do here to make this production ready:
 
 - [ ] Clean up the code
 - [ ] Flesh out tests
-- [ ] Expose exporters OTHER than logging such as StackDriver
+- [X] Expose exporters OTHER than logging such as StackDriver
 - [ ] Expose traced routes in configuration
 - [ ] Actually publish this to central
 

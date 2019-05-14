@@ -16,7 +16,7 @@ public abstract class AbstractSamplerFactory implements SamplerFactory {
     @Nullable
     public SamplerFactory getSampler() {
         if (sampler == null) {
-            return new DefaultSampleFactory();
+            return new DefaultSampler();
         }
         return sampler;
     }

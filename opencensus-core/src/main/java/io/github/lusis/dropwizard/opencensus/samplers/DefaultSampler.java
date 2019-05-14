@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @JsonTypeName("never")
-public class DefaultSampleFactory extends AbstractSamplerFactory {
+public class DefaultSampler extends AbstractSamplerFactory {
 
     @Override
     public Sampler sampler() {

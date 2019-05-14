@@ -8,12 +8,9 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.Collection;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @JsonTypeName("default")
-public class DefaultExporterFactory extends AbstractExporterFactory {
-    private static final DefaultExporterFactory.NullExporterHandler HANDLER = new DefaultExporterFactory.NullExporterHandler();
+public class DefaultExporter extends AbstractExporterFactory {
+    private static final DefaultExporter.NullExporterHandler HANDLER = new DefaultExporter.NullExporterHandler();
 
     @Override
     public void register() {

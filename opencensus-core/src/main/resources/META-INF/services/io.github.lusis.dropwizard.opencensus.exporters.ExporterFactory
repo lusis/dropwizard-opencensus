@@ -1,2 +1,3 @@
-io.github.lusis.dropwizard.opencensus.exporters.LoggingExporterFactory
-io.github.lusis.dropwizard.opencensus.exporters.DefaultExporterFactory
+io.github.lusis.dropwizard.opencensus.exporters.LoggingExporter
+io.github.lusis.dropwizard.opencensus.exporters.DefaultExporter
+io.github.lusis.dropwizard.opencensus.exporters.StackDriverExporter

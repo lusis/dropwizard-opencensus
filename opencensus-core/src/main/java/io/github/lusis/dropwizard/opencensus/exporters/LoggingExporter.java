@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @JsonTypeName("logging")
-public class LoggingExporterFactory extends AbstractExporterFactory {
+public class LoggingExporter extends AbstractExporterFactory {
 
     @Override
     public void register() {
