@@ -72,16 +72,42 @@ opencensus:
     sampleRate: 0.25
 ```
 
-For now the only valid exporter that actually exports data (as opposed to dropping it on the floor) is `logging`.
+Valid `exporter` types are `default` (drops traces on the floor), `logging`, `stackdriver`.
 Valid `sampler` types are `always`, `never`, `probability`.
 The default probability `sampleRate` is `0.10`.
 
 The bundle will apply tracing to all non-admin paths via the `OcHttpServletFilter`.
 
+Below is a fully commented config:
+
+```yaml
+# by default, no configuration enables tracing for all paths but drops everything on the floor
+opencensus:
+# set enabled to false to fully disable it
+#  enabled: false
+  exporter:
+    # options [logging, default, stackdriver]
+    type: logging
+    # projectId is used for the stackdriver exporter - optional
+    # env var GOOGLE_APPLICATION_CREDENTIALS by default
+    #projectId:  test-project-1-XXXXXXXX
+  sampler:
+    # options [never, always, probability]
+    type: always
+    # sampleRate is used for the probability sampler
+    #sampleRate: 0.50
+  # array of urls to trace - default is /*
+  # paths:
+  #  - "/example/ping"
+  #  - "/example/client"
+```
+
 Example Application
 -------------------
 
-This bundle includes a simple DropWizard application with one exposed path: `/example/ping`.
+This bundle includes a simple DropWizard application with two exposed paths:
+- `/example/ping`
+- `/example/client` (this uses the instrumented jersey client to call `/example/ping` to show parent/child spans)
 
 You can build and start the example application like so:
 
