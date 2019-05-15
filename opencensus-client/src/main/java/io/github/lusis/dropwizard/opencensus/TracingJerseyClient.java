@@ -11,6 +11,7 @@ import java.util.Objects;
 
 public class TracingJerseyClient {
     private final Environment environment;
+    private String clientName = "opencensus-jersey-client";
 
     public TracingJerseyClient(final Environment environment) {
         this.environment = Objects.requireNonNull(environment);
@@ -22,8 +23,14 @@ public class TracingJerseyClient {
         return build(client);
     }
 
+    public TracingJerseyClient setName(final String clientName) {
+        this.clientName = clientName;
+        return this;
+    }
+
     public Client build(final JerseyClientBuilder client) {
         return client.withProvider(new JaxrsClientFilter()
-        ).build("instrumented-jersey-client");
+        ).build(this.clientName);
     }
+
 }

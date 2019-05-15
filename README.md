@@ -14,8 +14,8 @@ Dependency Info
         </dependency>
 ```
 
-Usage
------
+Server Usage
+------------
 
 Add `OpenCensusBundle` to your Application class:
 
@@ -33,6 +33,8 @@ Add `OpenCensusBundle` to your Application class:
 
 ```
 
+Client Usage
+------------
 If you want to use an instrumented jersey client, you can as well via the opencensus-client package:
 
 ```xml
@@ -43,6 +45,13 @@ If you want to use an instrumented jersey client, you can as well via the opence
         </dependency>
 ```
 
+```java
+        final Client client;
+        client = new TracingJerseyClient(environment).build(configuration.getTracingJerseyClientConfiguration());
+        // alternately, you can set the user_agent
+        //client = new TracingJerseyClient(environment).setName("my-custom-ua").build(configuration.getTracingJerseyClientConfiguration());
+        final ExampleResource resource = new ExampleResource(client);
+```
 
 Configuration
 -------------

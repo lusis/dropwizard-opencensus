@@ -34,6 +34,8 @@ public class ExampleApplication extends Application<ExampleConfiguration> {
     public void run(final ExampleConfiguration configuration, final Environment environment) {
         final Client client;
         client = new TracingJerseyClient(environment).build(configuration.getTracingJerseyClientConfiguration());
+        // alternately, you can set the user_agent
+        //client = new TracingJerseyClient(environment).setName("my-custom-ua").build(configuration.getTracingJerseyClientConfiguration());
         final ExampleResource resource = new ExampleResource(client);
         environment.jersey().register(resource);
     }

@@ -9,7 +9,7 @@ opencensus:
   exporters:
     # options [logging, default, stackdriver]
     - type: logging
-   # - type: stackdriver
+    - type: stackdriver
       # projectId is used for the stackdriver exporter - optional
       # defaults are checked here: https://github.com/googleapis/google-cloud-java/blob/master/README.md#specifying-a-project-id
       #projectId:  test-project-1-XXXXXXXX
