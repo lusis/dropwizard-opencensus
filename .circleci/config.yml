@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/dropwizard-opencensus
     docker:
-      - image: circleci/openjdk:8-jdk-browsers
+      - image: adoptopenjdk/maven-openjdk8
     steps:
       - checkout
         #- restore_cache:
