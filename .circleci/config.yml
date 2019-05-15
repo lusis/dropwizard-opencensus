@@ -6,13 +6,13 @@ jobs:
       - image: circleci/openjdk:8-jdk-browsers
     steps:
       - checkout
-      - restore_cache:
-          key: dropwizard-opencensus-{{ checksum "pom.xml" }}
-      - run: mvn dependency:go-offline
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: dropwizard-opencensus-{{ checksum "pom.xml" }}
+        #- restore_cache:
+        #  key: dropwizard-opencensus-{{ checksum "pom.xml" }}
+        #- run: mvn dependency:go-offline
+        #- save_cache:
+        #  paths:
+        #    - ~/.m2
+        #  key: dropwizard-opencensus-{{ checksum "pom.xml" }}
       - run: mvn test jacoco:report-aggregate package
       - run:
           name: gather test results
