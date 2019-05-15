@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.opencensus.trace.Sampler;
 import io.opencensus.trace.samplers.Samplers;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @JsonTypeName("probability")
 public class ProbabilitySampler extends AbstractSamplerFactory {

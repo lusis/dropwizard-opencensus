@@ -1,7 +1,6 @@
 package io.github.lusis.dropwizard.opencensus;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.github.lusis.dropwizard.opencensus.exporters.DefaultExporter;
 import io.github.lusis.dropwizard.opencensus.exporters.ExporterFactory;
 import io.github.lusis.dropwizard.opencensus.samplers.SamplerFactory;
 import io.github.lusis.dropwizard.opencensus.samplers.DefaultSampler;
