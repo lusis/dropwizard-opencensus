@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-        key: dropwizard-opencensus-{{ checksum "pom.xml" }}
+          key: dropwizard-opencensus-{{ checksum "pom.xml" }}
       - run: mvn dependency:go-offline
       - save_cache:
           paths:
