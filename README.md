@@ -54,8 +54,8 @@ If you want to configure options for development:
 ```yaml
 opencensus:
   enabled: true
-  exporter:
-    type: logging
+  exporters:
+    - type: logging
   sampler:
     type: always
 ```
@@ -65,14 +65,16 @@ Potential production kinds of settings might be:
 ```yaml
 opencensus:
   enabled: true
-  exporter:
-    type: logging
+  exporters:
+    - type: logging # log traces
+    - type: stackdriver # also send to stackdriver
   sampler:
     type: probability
     sampleRate: 0.25
 ```
 
-Valid `exporter` types are `default` (drops traces on the floor), `logging`, `stackdriver`.
+OpenCensus supports multiple exporters so we expose that for you.
+Valid `exporters` types are `default` (drops traces on the floor), `logging`, `stackdriver`.
 Valid `sampler` types are `always`, `never`, `probability`.
 The default probability `sampleRate` is `0.10`.
 
@@ -81,16 +83,24 @@ The bundle will apply tracing to all non-admin paths via the `OcHttpServletFilte
 Below is a fully commented config:
 
 ```yaml
+logging:
+  level: INFO
+  loggers:
+    io.github.lusis: DEBUG
 # by default, no configuration enables tracing for all paths but drops everything on the floor
 opencensus:
 # set enabled to false to fully disable it
 #  enabled: false
-  exporter:
+  exporters:
     # options [logging, default, stackdriver]
-    type: logging
-    # projectId is used for the stackdriver exporter - optional
-    # env var GOOGLE_APPLICATION_CREDENTIALS by default
-    #projectId:  test-project-1-XXXXXXXX
+    - type: logging
+   # - type: stackdriver
+      # projectId is used for the stackdriver exporter - optional
+      # defaults are checked here: https://github.com/googleapis/google-cloud-java/blob/master/README.md#specifying-a-project-id
+      #projectId:  test-project-1-XXXXXXXX
+      # attributes are key/value strings applied as static attributes to all spans in StackDriver
+      #attributes:
+      #  project_name: ExampleApplication
   sampler:
     # options [never, always, probability]
     type: always

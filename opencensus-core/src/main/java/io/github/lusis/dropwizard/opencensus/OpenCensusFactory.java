@@ -1,5 +1,6 @@
 package io.github.lusis.dropwizard.opencensus;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.lusis.dropwizard.opencensus.exporters.DefaultExporter;
 import io.github.lusis.dropwizard.opencensus.exporters.ExporterFactory;
 import io.github.lusis.dropwizard.opencensus.samplers.SamplerFactory;
@@ -8,6 +9,8 @@ import io.github.lusis.dropwizard.opencensus.samplers.DefaultSampler;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.ArrayList;
 
 public class OpenCensusFactory {
     private boolean enabled = true;
@@ -15,9 +18,6 @@ public class OpenCensusFactory {
 
     @Nullable
     private SamplerFactory sampler = new DefaultSampler();
-
-    @Nullable
-    private ExporterFactory exporter = new DefaultExporter();
 
     @JsonProperty
     @Nullable
@@ -51,15 +51,11 @@ public class OpenCensusFactory {
         this.sampler = sampler;
     }
 
-    @JsonProperty("exporter")
+    @JsonProperty("exporters")
     @Nullable
-    public ExporterFactory getExporterFactory() {
-        return this.exporter;
-    }
+    private List<ExporterFactory> exporters = new ArrayList<>();
 
-    @JsonProperty("exporter")
+    @JsonIgnore
     @Nullable
-    public void setExporterFactory(ExporterFactory exporter) {
-        this.exporter = exporter;
-    }
+    public List<ExporterFactory> getExporters() { return this.exporters; }
 }
