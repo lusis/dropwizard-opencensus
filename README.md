@@ -8,7 +8,7 @@ Dependency Info
 
 ```xml
         <dependency>
-            <groupId>io.github.lusis</groupId>
+            <groupId>io.github.lusis.dropwizard</groupId>
             <artifactId>opencensus-core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
@@ -39,7 +39,7 @@ If you want to use an instrumented jersey client, you can as well via the opence
 
 ```xml
         <dependency>
-            <groupId>io.github.lusis</groupId>
+            <groupId>io.github.lusis.dropwizard</groupId>
             <artifactId>opencensus-client</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
