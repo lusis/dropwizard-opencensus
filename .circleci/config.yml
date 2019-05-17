@@ -14,31 +14,50 @@
 # limitations under the License.
 #
 
-version: 2
+version: 2.1
 jobs:
-  build:
+  test:
     working_directory: ~/dropwizard-opencensus
     docker:
       - image: adoptopenjdk/maven-openjdk8
     steps:
       - checkout
-        #- restore_cache:
-        #  key: dropwizard-opencensus-{{ checksum "pom.xml" }}
-        #- run: mvn dependency:go-offline
-        #- save_cache:
-        #  paths:
-        #    - ~/.m2
-        #  key: dropwizard-opencensus-{{ checksum "pom.xml" }}
-      - run: mvn test jacoco:report-aggregate package
+      - run: mvn -s ~/.circleci/settings.xml clean test
       - run:
           name: gather test results
           command: |
             mkdir -p ~/test-results/junit/
-            mkdir -p ~/test-results/jacoco/
+            # mkdir -p ~/test-results/jacoco/
             find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
-            cp -Rp target/site/jacoco-aggregate/* ~/test-results/jacoco/
+            # cp -Rp target/site/jacoco-aggregate/* ~/test-results/jacoco/
           when: always
       - store_test_results:
           path: ~/test-results
-      - store_artifacts:
-          path: ~/test-results/jacoco
+      #- store_artifacts:
+      #    path: ~/test-results/jacoco
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: dropwizard-opencensus-{{ checksum "pom.xml" }}
+  deploy:
+    working_directory: ~/dropwizard-opencensus
+    docker:
+      - image: adoptopenjdk/maven-openjdk8
+    steps:
+      - checkout
+      - restore_cache:
+          key: dropwizard-opencensus-{{ checksum "pom.xml" }}
+      - run: mvn -s ~/.circleci/settings.xml deploy -D skipTests=true
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test:
+          filters:
+            tags:
+              only: /.*/
+      - deploy:
+          context: "maven credentials"
+          filters:
+            branches:
+              only: master
