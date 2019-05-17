@@ -13,25 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.lusis.dropwizard.opencensus.samplers;
+package com.example.example;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javax.annotation.Nullable;
+import io.dropwizard.Configuration;
+import io.github.lusis.dropwizard.opencensus.OpenCensusFactory;
+import io.github.lusis.dropwizard.opencensus.TracingJerseyClientConfiguration;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
-public abstract class AbstractSamplerFactory implements SamplerFactory {
-  private SamplerFactory sampler = null;
+public class ExampleConfiguration extends Configuration {
+  @NotNull @Valid public final OpenCensusFactory opencensus = new OpenCensusFactory();
+
+  private final TracingJerseyClientConfiguration ocClient = new TracingJerseyClientConfiguration();
 
   @JsonProperty
-  public void setSampler(SamplerFactory sampler) {
-    this.sampler = sampler;
+  public OpenCensusFactory getOpenCensusFactory() {
+    return opencensus;
   }
 
   @JsonProperty
-  @Nullable
-  public SamplerFactory getSampler() {
-    if (sampler == null) {
-      return new DefaultSampler();
-    }
-    return sampler;
+  public TracingJerseyClientConfiguration getTracingJerseyClientConfiguration() {
+    return ocClient;
   }
 }
