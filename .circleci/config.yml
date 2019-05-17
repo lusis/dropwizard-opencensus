@@ -57,7 +57,8 @@ workflows:
             tags:
               only: /.*/
       - deploy:
-          requires: test
+          requires:
+            - test
           context: "maven credentials"
           filters:
             branches:
