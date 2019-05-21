@@ -15,6 +15,7 @@
  */
 package io.github.lusis.dropwizard.opencensus.exporters;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.opencensus.trace.Tracing;
 import io.opencensus.trace.export.SpanData;
@@ -22,7 +23,7 @@ import io.opencensus.trace.export.SpanExporter;
 import java.util.Collection;
 
 @JsonTypeName("default")
-public class DefaultExporter extends AbstractExporterFactory {
+public class DefaultExporter implements ExporterFactory {
   private static final DefaultExporter.NullExporterHandler HANDLER =
       new DefaultExporter.NullExporterHandler();
 
@@ -42,6 +43,12 @@ public class DefaultExporter extends AbstractExporterFactory {
 
   static void unregister(SpanExporter spanExporter) {
     spanExporter.unregisterHandler("NullExporter");
+  }
+
+  @Override
+  @JsonIgnore
+  public ExporterFactory getExporter() {
+    return this;
   }
 
   static final class NullExporterHandler extends SpanExporter.Handler {

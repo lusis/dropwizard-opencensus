@@ -20,12 +20,13 @@ logging:
     io.github.lusis: DEBUG
 # by default, no configuration enables tracing for all paths but drops everything on the floor
 opencensus:
-# set enabled to false to fully disable it
-#  enabled: false
+  # set enabled to false to fully disable it
+  #  enabled: false
+  propagationFormat: b3
   exporters:
     # options [logging, default, stackdriver]
-    - type: logging 
-      #- type: stackdriver
+    - type: logging
+    - type: stackdriver
       # projectId is used for the stackdriver exporter - optional
       # defaults are checked here: https://github.com/googleapis/google-cloud-java/blob/master/README.md#specifying-a-project-id
       #projectId:  test-project-1-XXXXXXXX
@@ -37,7 +38,7 @@ opencensus:
     type: always
     # sampleRate is used for the probability sampler
     #sampleRate: 1
-  # array of urls to trace - default is /*
-  # paths:
-  #  - "/example/ping"
-  #  - "/example/client"
+    # array of urls to trace - default is /*
+    #paths:
+    #- "/example/ping"
+    #- "/example/client"

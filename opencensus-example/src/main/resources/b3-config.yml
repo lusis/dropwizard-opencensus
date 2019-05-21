@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 # we set these to random for parallel testing
 server:
   applicationConnectors:
@@ -26,6 +25,7 @@ logging:
   level: ERROR
 # by default, no configuration enables tracing for all paths but drops everything on the floor
 opencensus:
+  propagationFormat: b3
   # set enabled to false to fully disable it
   #  enabled: false
   exporters:

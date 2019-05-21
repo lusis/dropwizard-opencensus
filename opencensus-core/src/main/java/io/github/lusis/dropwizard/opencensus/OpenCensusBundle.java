@@ -22,7 +22,7 @@ import io.dropwizard.setup.Environment;
 import io.github.lusis.dropwizard.opencensus.exporters.DefaultExporter;
 import io.github.lusis.dropwizard.opencensus.exporters.ExporterFactory;
 import io.github.lusis.dropwizard.opencensus.samplers.SamplerFactory;
-import io.github.lusis.dropwizard.opencensus.server.TracingJerseyServer;
+import io.github.lusis.dropwizard.opencensus.server.TraceServlet;
 import io.opencensus.trace.Tracing;
 import io.opencensus.trace.config.TraceConfig;
 import io.opencensus.trace.config.TraceParams;
@@ -42,7 +42,7 @@ public abstract class OpenCensusBundle<C extends Configuration>
 
   @Override
   public void run(final C configuration, Environment environment) throws Exception {
-    OpenCensusFactory ocFactory = getOpenCensusFactory(configuration);
+    final OpenCensusFactory ocFactory = getOpenCensusFactory(configuration);
 
     if (configuration == null) {
       LOGGER.info("OpenCensus tracing is disabled");
@@ -51,8 +51,11 @@ public abstract class OpenCensusBundle<C extends Configuration>
       final SamplerFactory sampler = ocFactory.getSampler();
       final List<ExporterFactory> exporters = ocFactory.getExporters();
       final String[] paths = ocFactory.getPaths();
+      final String propagationFormat = ocFactory.getPropagationFormat();
+      final String isPublic = ocFactory.getIsPublic();
+
       if (enabled) {
-        buildTracing(environment, sampler, exporters, paths);
+        buildTracing(environment, sampler, exporters, propagationFormat, isPublic, paths);
       } else {
         LOGGER.info("OpenCensus tracing is disabled");
       }
@@ -63,7 +66,10 @@ public abstract class OpenCensusBundle<C extends Configuration>
       final Environment environment,
       final SamplerFactory sampler,
       final List<ExporterFactory> exporters,
+      final String format,
+      final String isPublic,
       String... paths) {
+    LOGGER.info("Enabling opencensus tracing");
     if (exporters.isEmpty()) {
       LOGGER.warn("no exporters specified. using default {}", DefaultExporter.class.getName());
       exporters.add(new DefaultExporter());
@@ -72,16 +78,17 @@ public abstract class OpenCensusBundle<C extends Configuration>
       activeTraceParams = traceConfig.getActiveTraceParams();
       traceConfig.updateActiveTraceParams(
           activeTraceParams.toBuilder().setSampler(sampler.sampler()).build());
-      LOGGER.info("exporters {}", (Object) exporters);
+      LOGGER.info("exporters {}", exporters);
       for (ExporterFactory exporter : exporters) {
         exporter.register();
       }
     }
 
-    LOGGER.info("Enabling opencensus tracing");
     LOGGER.info("TraceConfig {}", traceConfig.getActiveTraceParams());
     LOGGER.info("traced paths {}", (Object) paths);
+    LOGGER.info("propagation format {}", format);
+    LOGGER.info("public endpoints {}", isPublic);
 
-    new TracingJerseyServer(environment).setPaths(paths).build();
+    new TraceServlet(environment, format, isPublic, paths);
   }
 }

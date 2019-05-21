@@ -24,12 +24,12 @@
     <parent>
         <groupId>io.github.lusis.dropwizard</groupId>
         <artifactId>dropwizard-pom</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
 
     <groupId>io.github.lusis.dropwizard</groupId>
     <artifactId>dropwizard-opencensus</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>dropwizard-opencensus-parent</name>
@@ -43,7 +43,6 @@
     </properties>
 
     <modules>
-        <module>opencensus-client</module>
         <module>opencensus-core</module>
         <module>opencensus-example</module>
     </modules>

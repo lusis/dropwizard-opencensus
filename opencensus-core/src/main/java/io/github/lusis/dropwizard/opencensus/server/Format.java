@@ -13,8 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.lusis.dropwizard.opencensus;
+package io.github.lusis.dropwizard.opencensus.server;
 
-import io.dropwizard.client.JerseyClientConfiguration;
+import io.opencensus.trace.Tracing;
+import io.opencensus.trace.propagation.TextFormat;
+import javax.annotation.Nullable;
 
-public class TracingJerseyClientConfiguration extends JerseyClientConfiguration {}
+public class Format {
+  public static TextFormat getFormat(@Nullable String format) {
+    if (format != null && format.equalsIgnoreCase("b3")) {
+      return Tracing.getPropagationComponent().getB3Format();
+    }
+    return Tracing.getPropagationComponent().getTraceContextFormat();
+  }
+}

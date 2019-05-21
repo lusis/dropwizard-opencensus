@@ -22,7 +22,7 @@
     <parent>
         <groupId>io.github.lusis.dropwizard</groupId>
         <artifactId>dropwizard-opencensus</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>opencensus-example</artifactId>
@@ -54,13 +54,13 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>opencensus-client</artifactId>
-            <version>${project.version}</version>
+            <groupId>io.opencensus</groupId>
+            <artifactId>opencensus-api</artifactId>
+            <version>${opencensus.version}</version>
         </dependency>
         <dependency>
             <groupId>io.opencensus</groupId>
-            <artifactId>opencensus-api</artifactId>
+            <artifactId>opencensus-testing</artifactId>
             <version>${opencensus.version}</version>
         </dependency>
         <dependency>
@@ -76,7 +76,22 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.9.0</version>
+            <version>2.9.8</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.8</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.9.8</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>27.1-jre</version>
         </dependency>
     </dependencies>
 

@@ -23,4 +23,6 @@ public interface ExporterFactory extends Discoverable {
   void register();
 
   void unregister();
+
+  ExporterFactory getExporter();
 }

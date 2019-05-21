@@ -27,8 +27,12 @@ import io.github.lusis.dropwizard.opencensus.exporters.DefaultExporter;
 import io.github.lusis.dropwizard.opencensus.exporters.LoggingExporter;
 import io.github.lusis.dropwizard.opencensus.exporters.StackDriverExporter;
 import io.github.lusis.dropwizard.opencensus.samplers.ProbabilitySampler;
+import io.opencensus.testing.export.TestHandler;
+import io.opencensus.trace.samplers.Samplers;
 import java.io.File;
 import javax.validation.Validator;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 public class OpenCensusFactoryTest {
@@ -36,6 +40,17 @@ public class OpenCensusFactoryTest {
   private final Validator validator = Validators.newValidator();
   private final YamlConfigurationFactory<OpenCensusFactory> validatingFactory =
       new YamlConfigurationFactory<>(OpenCensusFactory.class, validator, objectMapper, "dw");
+  private static final TestHandler testHandler = TestHelpers.getTestHandler();
+
+  @Before
+  public void before() {
+    TestHelpers.registerTestExporter();
+  }
+
+  @After
+  public void after() {
+    TestHelpers.unregisterTestExporter();
+  }
 
   @Test
   public void isDiscoverable() throws Exception {
@@ -52,18 +67,17 @@ public class OpenCensusFactoryTest {
   public void disabledConfig() throws Exception {
     final File yml = new File(Resources.getResource("disabled.yaml").toURI());
     final OpenCensusFactory oc = validatingFactory.build(yml);
-    assertThat((oc).getEnabled()).isFalse();
+    assertThat(oc.getEnabled()).isFalse();
   }
 
   @Test
   public void enabledDefaultConfig() throws Exception {
     final File yml = new File(Resources.getResource("enabled.yaml").toURI());
     final OpenCensusFactory oc = validatingFactory.build(yml);
-    assertThat((oc).getEnabled()).isTrue();
-    // default exporter doesn't get assigned until run
-    assertThat((oc).getExporters()).hasSize(0);
-    assertThat((oc).getPaths()).contains("/*");
-    assertThat((oc).getSampler().sampler().toString()).contains("NeverSampleSampler");
+    assertThat(oc.getEnabled()).isTrue();
+    assertThat(oc.getExporters()).hasSize(0);
+    assertThat(oc.getPaths()).contains("/*");
+    assertThat(oc.getSampler().sampler()).isInstanceOf(Samplers.neverSample().getClass());
   }
 
   @Test
@@ -71,11 +85,13 @@ public class OpenCensusFactoryTest {
     final File yml = new File(Resources.getResource("full.yaml").toURI());
     final OpenCensusFactory oc = validatingFactory.build(yml);
     final ProbabilitySampler pbSampler = (ProbabilitySampler) oc.getSampler();
-    assertThat((oc).getEnabled()).isTrue();
-    assertThat((oc).getExporters()).hasSize(1);
-    assertThat((oc).getPaths()).contains("/foo");
-    assertThat((oc).getSampler().sampler().toString()).contains("ProbabilitySampler");
-    assertThat((oc).getSampler().sampler().toString())
+    assertThat(oc.getEnabled()).isTrue();
+    assertThat(oc.getExporters()).hasSize(1);
+    assertThat(oc.getExporters().get(0).getExporter()).isInstanceOf(LoggingExporter.class);
+    assertThat(oc.getPaths()).contains("/foo");
+    assertThat(oc.getSampler().sampler())
+        .isInstanceOf(Samplers.probabilitySampler(pbSampler.getSampleRate()).getClass());
+    assertThat(oc.getSampler().sampler().toString())
         .contains("probability=" + pbSampler.getSampleRate());
   }
 
@@ -83,10 +99,17 @@ public class OpenCensusFactoryTest {
   public void alwaysSampleConfig() throws Exception {
     final File yml = new File(Resources.getResource("always_sample.yaml").toURI());
     final OpenCensusFactory oc = validatingFactory.build(yml);
-    assertThat((oc).getEnabled()).isTrue();
-    // default exporter doesn't get assigned until run
-    assertThat((oc).getExporters()).hasSize(0);
-    assertThat((oc).getPaths()).contains("/*");
-    assertThat((oc).getSampler().sampler().toString()).contains("AlwaysSampleSampler");
+    assertThat(oc.getEnabled()).isTrue();
+    assertThat(oc.getExporters()).hasSize(0);
+    assertThat(oc.getPaths()).contains("/*");
+    assertThat(oc.getSampler().sampler()).isInstanceOf(Samplers.alwaysSample().getClass());
+  }
+
+  @Test
+  public void testB3Format() throws Exception {
+    final File yml = new File(Resources.getResource("b3-config.yaml").toURI());
+    final OpenCensusFactory oc = validatingFactory.build(yml);
+
+    assertThat(oc.getPropagationFormat()).isEqualToIgnoringCase("b3");
   }
 }

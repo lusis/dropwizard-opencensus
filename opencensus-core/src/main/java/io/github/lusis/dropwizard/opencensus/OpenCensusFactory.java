@@ -17,9 +17,11 @@ package io.github.lusis.dropwizard.opencensus;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.github.lusis.dropwizard.opencensus.client.TracingClientProvider;
 import io.github.lusis.dropwizard.opencensus.exporters.ExporterFactory;
 import io.github.lusis.dropwizard.opencensus.samplers.DefaultSampler;
 import io.github.lusis.dropwizard.opencensus.samplers.SamplerFactory;
+import io.opencensus.contrib.http.jaxrs.JaxrsClientFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,8 +30,8 @@ import javax.annotation.Nullable;
 public class OpenCensusFactory {
   private boolean enabled = true;
   private String[] paths = new String[] {"/*"};
-
-  // @Nullable private SamplerFactory sampler = new DefaultSampler();
+  private String propagationFormat = null;
+  private String isPublic = "false";
 
   @JsonProperty
   @Nullable
@@ -41,6 +43,29 @@ public class OpenCensusFactory {
   @Nullable
   public Boolean getEnabled() {
     return this.enabled;
+  }
+
+  @JsonProperty
+  @Nullable
+  public String getPropagationFormat() {
+    return this.propagationFormat;
+  }
+
+  @JsonProperty
+  public String getIsPublic() {
+    return this.isPublic;
+  }
+
+  @JsonProperty
+  @Nullable
+  public void setIsPublic(String isPublic) {
+    this.isPublic = isPublic;
+  }
+
+  @JsonProperty
+  @Nullable
+  public void setPropagationFormat(String format) {
+    this.propagationFormat = format;
   }
 
   @JsonProperty
@@ -73,5 +98,9 @@ public class OpenCensusFactory {
   @Nullable
   public List<ExporterFactory> getExporters() {
     return this.exporters;
+  }
+
+  public JaxrsClientFilter toJaxRsProvider() {
+    return new TracingClientProvider(this.getPropagationFormat()).getFilter();
   }
 }

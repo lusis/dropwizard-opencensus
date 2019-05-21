@@ -17,11 +17,11 @@ package com.example.example;
 
 import com.example.example.resources.ExampleResource;
 import io.dropwizard.Application;
+import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.github.lusis.dropwizard.opencensus.OpenCensusBundle;
 import io.github.lusis.dropwizard.opencensus.OpenCensusFactory;
-import io.github.lusis.dropwizard.opencensus.TracingJerseyClient;
 import javax.ws.rs.client.Client;
 
 public class ExampleApplication extends Application<ExampleConfiguration> {
@@ -48,13 +48,12 @@ public class ExampleApplication extends Application<ExampleConfiguration> {
 
   @Override
   public void run(final ExampleConfiguration configuration, final Environment environment) {
-    final Client client =
-        new TracingJerseyClient(environment)
-            .build(configuration.getTracingJerseyClientConfiguration());
-    // alternately, you can set the user_agent
-    // client = new
-    // TracingJerseyClient(environment).setName("my-custom-ua").build(configuration.getTracingJerseyClientConfiguration());
-    final ExampleResource resource = new ExampleResource(client);
+    JerseyClientBuilder builder = new JerseyClientBuilder(environment);
+    Client tracedClient =
+        builder
+            .withProvider(configuration.getOpenCensusFactory().toJaxRsProvider())
+            .build("traced-jersey-client");
+    final ExampleResource resource = new ExampleResource(tracedClient);
     environment.jersey().register(resource);
   }
 }

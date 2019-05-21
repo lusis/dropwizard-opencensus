@@ -13,24 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.example.resources;
+package io.github.lusis.dropwizard.opencensus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.opencensus.trace.Tracing;
-import java.util.Objects;
-import javax.ws.rs.*;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
 
-@Path("/example")
-public class ExampleResource {
-
-  private Client jerseyClient;
-
-  public ExampleResource(Client client) {
-    this.jerseyClient = Objects.requireNonNull(client);
-  }
+@Path("/")
+public class TestResources {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -39,7 +32,7 @@ public class ExampleResource {
     MultivaluedMap<String, String> requestHeaders = headers.getRequestHeaders();
     try {
       String json = new ObjectMapper().writeValueAsString(requestHeaders);
-      return Response.ok().entity(json + "\n").build();
+      return Response.ok().entity(json).build();
     } catch (Exception e) {
       return Response.serverError().entity(e.getMessage()).build();
     }
@@ -47,22 +40,10 @@ public class ExampleResource {
 
   @GET
   @Produces(MediaType.TEXT_PLAIN)
-  @Path("ping")
-  public String ping() {
+  @Path("traceconfig")
+  public String traceconfig() {
     final String myTracer =
         Tracing.getTraceConfig().getActiveTraceParams().getSampler().getDescription();
-    return myTracer + "\n";
-  }
-
-  @GET
-  @Path("client")
-  public Response urlGrabber(
-      @DefaultValue("http://localhost:8080/example/headers") @QueryParam("url") String url)
-      throws InterruptedException {
-    if (url == null || url.trim().length() == 0) {
-      return Response.serverError().entity("url cannot be blank").build();
-    }
-    final WebTarget target = this.jerseyClient.target(url);
-    return target.request().get();
+    return myTracer;
   }
 }

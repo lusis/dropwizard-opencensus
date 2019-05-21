@@ -30,10 +30,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @JsonTypeName("stackdriver")
-public class StackDriverExporter extends AbstractExporterFactory {
+public class StackDriverExporter implements ExporterFactory {
   private static final Logger LOGGER = LoggerFactory.getLogger(StackDriverExporter.class.getName());
   private String projectId = null;
   private Map<String, String> attributes = Collections.emptyMap();
+
+  @Override
+  @JsonIgnore
+  public ExporterFactory getExporter() {
+    return this;
+  }
 
   @JsonProperty("projectId")
   public void setProjectId(String projectId) {

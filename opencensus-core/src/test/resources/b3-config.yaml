@@ -1,0 +1,4 @@
+propagationFormat: b3
+enabled: true
+sampler:
+  type: always

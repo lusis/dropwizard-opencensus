@@ -10,7 +10,7 @@ Dependency Info
         <dependency>
             <groupId>io.github.lusis.dropwizard</groupId>
             <artifactId>opencensus-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
 ```
 
@@ -41,16 +41,15 @@ If you want to use an instrumented jersey client, you can as well via the opence
         <dependency>
             <groupId>io.github.lusis.dropwizard</groupId>
             <artifactId>opencensus-client</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
 ```
 
 ```java
-        final Client client;
-        client = new TracingJerseyClient(environment).build(configuration.getTracingJerseyClientConfiguration());
-        // alternately, you can set the user_agent
-        //client = new TracingJerseyClient(environment).setName("my-custom-ua").build(configuration.getTracingJerseyClientConfiguration());
-        final ExampleResource resource = new ExampleResource(client);
+   Client client =
+        new JerseyClientBuilder(environment)
+            .withProvider(new TracingClientProvider().getFilter()) // or TracingClientProvider("b3")
+            .build("traced-client");
 ```
 
 Configuration
@@ -73,6 +72,8 @@ Potential production kinds of settings might be:
 
 ```yaml
 opencensus:
+  propagationFormat: b3
+  isPublic: "true"
   enabled: true
   exporters:
     - type: logging # log traces
@@ -92,14 +93,15 @@ The bundle will apply tracing to all non-admin paths via the `OcHttpServletFilte
 Below is a fully commented config:
 
 ```yaml
-logging:
-  level: INFO
-  loggers:
-    io.github.lusis: DEBUG
 # by default, no configuration enables tracing for all paths but drops everything on the floor
 opencensus:
-# set enabled to false to fully disable it
-#  enabled: false
+  # see note about propagationFormat in README
+  # propagationFormat: b3
+  # see note about isPublic in README
+  # Note that this is a string not a boolean
+  # isPublic: "true"
+  # set enabled to false to fully disable it
+  #  enabled: false
   exporters:
     # options [logging, default, stackdriver]
     - type: logging
@@ -121,18 +123,79 @@ opencensus:
   #  - "/example/client"
 ```
 
+`propagationFormat`
+-------------------
+
+This setting defines which set of headers to send (in the case of a client) or read from (in the case of a server)
+in order to enable distributed tracing across service boundaries.
+
+This setting is ENTIRELY environment specific. The default for not only the `opencensus-java` libraries
+but every other opencensus language implementation is the [w3c trace context](https://w3c.github.io/trace-context/).
+
+It is worth noting the big ugly warning on that page stating that:
+
+> Do not attempt to implement this version of the specification. Do not reference this version as authoritative in any way.
+
+And yet.....
+
+The exception to this is `opencensus-go` which uses the [`b3` implementation](https://github.com/apache/incubator-zipkin-b3-propagation)
+which is used by zipkin, opentracing and other "OG" software in the tracing space.
+
+What does this mean? I'm glad you asked....
+
+Clients talking to services with DIFFERENT formats over HTTP (i.e. default java client talking to default golang server) will NOT create [Links](https://opencensus.io/tracing/span/link/) 
+or have a [Parent Span](https://opencensus.io/tracing/span/parentspanid/).
+
+This does NOT affect gRPC services as those use the `binary` format across all the language implementations.
+It also does not affect passing a span context between function/methods in the within the same application "state" (i.e. single golang process or jvm instance)
+
+The other gotcha with this setting is that, at least in the various server implementations across languages, is that it is global:
+
+- in Java implementations, it's applied at the servlet container level for instance
+- in Go implementations, it's applied to the handler on servers and transport on clients
+
+Realistically, any server needs to opt into either B3 or TraceContext for distributed tracing across HTTP.
+
+_None of this even gets into the format used when running on AppEngine talking to StackDriver_
+
+For clients, this can be set at instantiation so you can have one client for calling `TraceContext` endpoints and another for calling `B3` endpoints.
+
+In a perfect world, the server-side implementations would call a chain to check the headers and use the appropriate one that it supports (imho)
+
+That leads us to `Public Endpoints`
+
+`isPublic`
+----------
+
+This is the other setting that is environment specific except this ONLY applies to server endpoints and like `propagationFormat`, it's global.
+
+In a nutshell, `isPublic` controls how a server interprets any trace headers it gets over HTTP.
+
+If `isPublic` is false, the incoming request's traceID is set as the parent and spans generate by that endpoint will be children of that trace id.
+If `isPublic` is true, the incoming request's trace id is set as a link. This will generate a new span with an attribute mentioning this link.
+
+Being that this is, again, global to the servlet container in Java you need to know if your which way you want this configured.
+General rule, if you're taking ANY public internet requests, set to to `"true"`. Otherwise leave it empty, which is a default of `"false"`.
+
+You can read more about links [here](https://opencensus.io/tracing/span/link/).
+
+As an alternative to this global requirement, you COULD leverage the `paths` setting and only enabled tracing on truly private endpoints.
+ 
+
 Example Application
 -------------------
 
 This bundle includes a simple DropWizard application with two exposed paths:
-- `/example/ping`
-- `/example/client` (this uses the instrumented jersey client to call `/example/ping` to show parent/child spans)
+- `/example/ping` - dumps the TraceConfig as plaintext
+- `/example/headers` - dumps the request headers as JSON
+- `/example/client` - this uses the instrumented jersey client to call `/example/headers` to show/test parent/child spans by default
+   - optionally takes a `url` query parameter to call for testing cross-language interoperability
 
 You can build and start the example application like so:
 
 ```
 mvn clean package
-java -jar opencensus-example/target/opencensus-example-0.0.1-SNAPSHOT.jar server opencensus-example/config.yml
+java -jar opencensus-example/target/opencensus-example-<version>.jar server opencensus-example/config.yml
 ```
 
 From another window, you can `curl http://localhost:8080/example/client`
@@ -166,10 +229,10 @@ TODO
 There's a lot to do here to make this production ready:
 
 - [ ] Clean up the code
-- [ ] Flesh out tests
+- [X] Flesh out tests
 - [X] Expose exporters OTHER than logging such as StackDriver
-- [ ] Expose traced routes in configuration
-- [ ] Actually publish this to central
+- [X] Expose traced routes in configuration
+- [X] Actually publish this to central
 
 Contributing
 ------------

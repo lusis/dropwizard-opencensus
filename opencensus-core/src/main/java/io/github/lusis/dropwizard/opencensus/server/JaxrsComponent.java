@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.lusis.dropwizard.opencensus.exporters;
+package io.github.lusis.dropwizard.opencensus.server;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.opencensus.contrib.http.jaxrs.JaxrsContainerExtractor;
+import io.opencensus.contrib.http.jaxrs.JaxrsContainerFilter;
+import io.opencensus.contrib.http.util.HttpViews;
+import io.opencensus.trace.Tracing;
 import javax.annotation.Nullable;
 
-public abstract class AbstractExporterFactory implements ExporterFactory {
-  private ExporterFactory exporter;
-
-  @JsonIgnore
-  public void setExporter(@Nullable ExporterFactory exporter) {
-    this.exporter = exporter;
-  }
-
-  @JsonIgnore
-  public ExporterFactory getExporter() {
-    return exporter;
+public class JaxrsComponent {
+  public JaxrsContainerFilter build(@Nullable String format) {
+    HttpViews.registerAllServerViews();
+    if (format != null && format.equalsIgnoreCase("b3")) {
+      return new JaxrsContainerFilter(
+          new JaxrsContainerExtractor(), Tracing.getPropagationComponent().getB3Format(), false);
+    }
+    return new JaxrsContainerFilter();
   }
 }
