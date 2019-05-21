@@ -19,6 +19,13 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.opencensus.trace.Sampler;
 import io.opencensus.trace.samplers.Samplers;
 
+/**
+ * DefaultSampler is the default sampler to use when undefined.
+ *
+ * <p>The default sampler is currently {@link io.opencensus.trace.samplers NeverSampleSampler}
+ *
+ * <p>which always returns a false sample decision
+ */
 @JsonTypeName("never")
 public class DefaultSampler extends AbstractSamplerFactory {
 

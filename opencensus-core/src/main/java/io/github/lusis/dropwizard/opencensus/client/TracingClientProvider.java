@@ -21,9 +21,29 @@ import io.opencensus.contrib.http.util.HttpViews;
 import io.opencensus.trace.Tracing;
 import javax.annotation.Nullable;
 
+/**
+ * TracingClientProvider provides a JAX-RS client filter that can be applied to a {@link
+ * org.glassfish.jersey.client.JerseyClient} via {@link
+ * io.dropwizard.client.JerseyClientBuilder#withProvider(Class)}
+ *
+ * <p>{@code Client client = new JerseyClientBuilder(B3.getEnvironment()) .withProvider(new
+ * TracingClientProvider("b3").getFilter()) .build("traced-client"); }
+ *
+ * <p>to use the B3 trace propagation header format
+ *
+ * <p>{@code Client client = new JerseyClientBuilder(B3.getEnvironment()) .withProvider(new
+ * TracingClientProvider().getFilter()) .build("traced-client"); }
+ *
+ * <p>to use the opencensus-java default of TraceContext propagation format
+ */
 public class TracingClientProvider {
   private JaxrsClientFilter filter = new JaxrsClientFilter();
 
+  /**
+   * Create a new TracingClientProvider with the specified format
+   *
+   * @param format use b3 or leave empty
+   */
   public TracingClientProvider(@Nullable String format) {
     HttpViews.registerAllClientViews();
     if ((format != null) && (format.equalsIgnoreCase("b3"))) {
@@ -33,6 +53,7 @@ public class TracingClientProvider {
     }
   }
 
+  /** @return a filter that can be applied */
   public JaxrsClientFilter getFilter() {
     return filter;
   }

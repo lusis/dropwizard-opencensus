@@ -19,6 +19,12 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.opencensus.trace.Sampler;
 import io.opencensus.trace.samplers.Samplers;
 
+/**
+ * AlwaysSampler sets the sampling decision to {@link io.opencensus.trace.samplers
+ * AlwaysSampleSampler}
+ *
+ * <p>This is really only useful for development as this will sample every single trace generated
+ */
 @JsonTypeName("always")
 public class AlwaysSampler extends AbstractSamplerFactory {
 

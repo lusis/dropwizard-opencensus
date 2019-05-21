@@ -19,6 +19,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.dropwizard.jackson.Discoverable;
 import io.opencensus.trace.Sampler;
 
+/**
+ * SamplerFactory creates a {@link Sampler Sampler} that can be used with {@link
+ * io.opencensus.trace.Tracer}
+ */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 public interface SamplerFactory extends Discoverable {
 

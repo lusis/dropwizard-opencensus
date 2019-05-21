@@ -30,6 +30,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * OpenCensusBundle is a dropwizard bundle you can use with your application to enable OpenCensus
+ * tracing
+ *
+ * @param <C> {@link Configuration}
+ */
 public abstract class OpenCensusBundle<C extends Configuration>
     implements ConfiguredBundle<C>, OpenCensusConfiguration<C> {
 

@@ -19,6 +19,11 @@ import io.opencensus.trace.Tracing;
 import io.opencensus.trace.propagation.TextFormat;
 import javax.annotation.Nullable;
 
+/**
+ * Format
+ *
+ * <p>translates a string into a {@link TextFormat}
+ */
 public class Format {
   public static TextFormat getFormat(@Nullable String format) {
     if (format != null && format.equalsIgnoreCase("b3")) {

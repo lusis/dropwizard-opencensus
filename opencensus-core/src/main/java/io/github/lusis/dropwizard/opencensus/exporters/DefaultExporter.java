@@ -22,16 +22,23 @@ import io.opencensus.trace.export.SpanData;
 import io.opencensus.trace.export.SpanExporter;
 import java.util.Collection;
 
+/**
+ * DefaultExporter
+ *
+ * <p>The default exporter drops all spans to the ground and discards them
+ */
 @JsonTypeName("default")
 public class DefaultExporter implements ExporterFactory {
   private static final DefaultExporter.NullExporterHandler HANDLER =
       new DefaultExporter.NullExporterHandler();
 
+  /** Register this exporter with the {@link io.opencensus.trace.Tracer} */
   @Override
   public void register() {
     register(Tracing.getExportComponent().getSpanExporter());
   }
 
+  /** Unregister this exporter with the {@link io.opencensus.trace.Tracer} */
   @Override
   public void unregister() {
     unregister(Tracing.getExportComponent().getSpanExporter());

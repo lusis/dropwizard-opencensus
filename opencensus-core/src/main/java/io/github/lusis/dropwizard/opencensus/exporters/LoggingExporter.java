@@ -19,14 +19,25 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.opencensus.exporter.trace.logging.LoggingTraceExporter;
 
+/**
+ * LoggingExporter uses {@link LoggingTraceExporter} to log all traces chosen for sampling
+ *
+ * <p>This is best used in conjunction with {@link
+ * io.github.lusis.dropwizard.opencensus.samplers.AlwaysSampler} in development.
+ *
+ * <p>Note that the logged traces are fairly structured but just toString dumps of the {@link
+ * io.opencensus.trace.export.SpanData}
+ */
 @JsonTypeName("logging")
 public class LoggingExporter implements ExporterFactory {
 
+  /** Register this exporter with the {@link io.opencensus.trace.Tracer} */
   @Override
   public void register() {
     LoggingTraceExporter.register();
   }
 
+  /** Unregister this exporter with the {@link io.opencensus.trace.Tracer} */
   @Override
   public void unregister() {
     LoggingTraceExporter.unregister();

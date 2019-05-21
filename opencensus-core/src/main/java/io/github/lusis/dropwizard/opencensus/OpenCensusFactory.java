@@ -33,6 +33,11 @@ public class OpenCensusFactory {
   private String propagationFormat = null;
   private String isPublic = "false";
 
+  /**
+   * Enable opencensus tracing
+   *
+   * @param enabled enable tracing?
+   */
   @JsonProperty
   @Nullable
   public void setEnabled(Boolean enabled) {
@@ -56,12 +61,28 @@ public class OpenCensusFactory {
     return this.isPublic;
   }
 
+  /**
+   * Set if endpoints served by the ApplicationContext are public internet endpoints are not
+   *
+   * <p>Determines if incoming trace propagation headers are treated as Parents or Links
+   *
+   * @param isPublic string of either true or false
+   */
   @JsonProperty
   @Nullable
   public void setIsPublic(String isPublic) {
     this.isPublic = isPublic;
   }
 
+  /**
+   * Set the trace propagatation header format
+   *
+   * <p>valid options are to not set this or "b3"
+   *
+   * <p>This is only applied to the servlet context
+   *
+   * @param format trace propagation header format for endpoints
+   */
   @JsonProperty
   @Nullable
   public void setPropagationFormat(String format) {
@@ -74,6 +95,13 @@ public class OpenCensusFactory {
     return Arrays.copyOf(this.paths, this.paths.length);
   }
 
+  /**
+   * List of paths to apply tracing
+   *
+   * <p>By default all routes ("/*") are traced
+   *
+   * @param paths List of route paths to instrument
+   */
   @JsonProperty
   @Nullable
   public void setPaths(String... paths) {

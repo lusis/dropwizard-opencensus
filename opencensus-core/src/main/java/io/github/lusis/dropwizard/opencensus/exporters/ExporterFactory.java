@@ -18,6 +18,10 @@ package io.github.lusis.dropwizard.opencensus.exporters;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.dropwizard.jackson.Discoverable;
 
+/**
+ * ExporterFactory creates {@link io.opencensus.exporter Exporters} that can be registered with
+ * {@link io.opencensus.trace.Tracer Tracers}
+ */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 public interface ExporterFactory extends Discoverable {
   void register();

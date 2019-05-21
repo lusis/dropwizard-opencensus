@@ -29,14 +29,33 @@ import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * TraceServlet applies the {@link OcHttpServletFilter} to a Dropwizard {@link
+ * io.dropwizard.Application} and registers all {@link HttpViews}
+ */
 public class TraceServlet {
   private static final Logger LOGGER = LoggerFactory.getLogger(TraceServlet.class);
 
+  /**
+   * @param environment a Dropwizard {@link Environment}
+   * @param format the trace propagation header format
+   * @param isPublic determines if incoming trace propagation headers are internal or not
+   * @param paths a list of paths that the filter should match against
+   */
   public TraceServlet(
       @NotNull Environment environment, String format, String isPublic, String[] paths) {
     this(environment.getApplicationContext(), environment.servlets(), format, isPublic, paths);
   }
 
+  /**
+   * TraceServlet mainly used for testing outside of a full Application
+   *
+   * @param context a Dropwizard {@link MutableServletContextHandler}
+   * @param servlets {@link ServletEnvironment}
+   * @param format the trace propagation header format
+   * @param isPublic determines if incoming trace propagation headers are internal or not
+   * @param paths a list of paths that the filter should match against
+   */
   public TraceServlet(
       @NotNull MutableServletContextHandler context,
       @NotNull ServletEnvironment servlets,

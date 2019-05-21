@@ -15,12 +15,20 @@
  */
 package io.github.lusis.dropwizard.opencensus.server;
 
+import io.opencensus.common.ExperimentalApi;
 import io.opencensus.contrib.http.jaxrs.JaxrsContainerExtractor;
 import io.opencensus.contrib.http.jaxrs.JaxrsContainerFilter;
 import io.opencensus.contrib.http.util.HttpViews;
 import io.opencensus.trace.Tracing;
 import javax.annotation.Nullable;
 
+/**
+ * JaxrsComponent creates a JAX-RS Container request filter that can be applied
+ *
+ * <p>This is an alternate unused implementation due to the complexities of auto-wiring it when
+ * creating the bundle
+ */
+@ExperimentalApi
 public class JaxrsComponent {
   public JaxrsContainerFilter build(@Nullable String format) {
     HttpViews.registerAllServerViews();
